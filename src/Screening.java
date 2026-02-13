@@ -185,5 +185,13 @@ public class Screening {
                 getAvailableSeatCodes().size()
         );
     }
-
+    public String formatLine() {
+        return String.format(
+                "%s | %s | %s | %s",
+                start,
+                hall.getName(),
+                type,
+                movie.getTitle()
+        );
+    }
 }
