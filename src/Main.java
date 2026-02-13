@@ -51,6 +51,8 @@ public class Main {
         Screening screening = cinema1.getProgrammeForNextWeek().get(0);
         System.out.println(cinema1.formatScreenings());
 
+        Movie movie = chooseMovie(cinema, scanner);
+
         Reservation r1 = screening.reservePlaces("R1S01", "R1S02", "R1S03");
         System.out.println(r1.formatSummary());
 
@@ -95,6 +97,19 @@ public class Main {
                 if (v >= min && v <= max) return v;
             } catch (NumberFormatException ignored) {}
             System.out.printf("Please enter a number between %d and %d.%n", min, max);
+        }
+    }
+    private static Movie chooseMovie(Cinema cinema, Scanner sc) {
+        while (true) {
+            System.out.print("Type movie title (or part of it): ");
+            String query = sc.nextLine().trim();
+
+            Movie found = cinema.findMovie(query);
+            if (found != null) {
+                System.out.println("Selected movie: " + found);
+                return found;
+            }
+            System.out.println("Movie not found. Try again.");
         }
     }
 ;}
