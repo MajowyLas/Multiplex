@@ -56,7 +56,7 @@ public class Main {
         Screening screeningg = chooseScreening(cinema, movie, scanner);
         List<String> chosenSeats = chooseSeats(screening, scanner);
 
-        Reservation r1 = screening.reservePlaces("R1S01", "R1S02", "R1S03");
+        Reservation r1 = screening.reservePlaces(chosenSeats.toArray(new String[0]));
         System.out.println(r1.formatSummary());
 
 //        try {
