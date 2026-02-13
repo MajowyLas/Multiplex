@@ -2,6 +2,6 @@ public enum SeatStatus {
 
     AVAILABLE,
     RESERVED,
-    SOLD,
+    SOLD
 
 }
