@@ -2,6 +2,8 @@
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
@@ -12,6 +14,10 @@ public class Main {
 
         system.addCinema(cinema1);
         system.addCinema(cinema2);
+
+        Scanner scanner = new Scanner(System.in);
+        Cinema cinema = chooseCinema(system, scanner);
+
 
         Hall hallA = new Hall("Hall A", SeatMap.generate(5, 10, 1));
         cinema1.addHall(hallA);
@@ -48,23 +54,47 @@ public class Main {
         Reservation r1 = screening.reservePlaces("R1S01", "R1S02", "R1S03");
         System.out.println(r1.formatSummary());
 
-        try {
-            screening.buyTickets("R1S01");
-        } catch (Exception e) {
-            System.out.println("Expected error: " + e.getMessage());
-            System.out.println(" ");
+//        try {
+//            screening.buyTickets("R1S01");
+//        } catch (Exception e) {
+//            System.out.println("Expected error: " + e.getMessage());
+//            System.out.println(" ");
+//        }
+//
+//        //przykład zakpu bez konta
+//        Order guestOrder = screening.buyTickets("R2S01", "R2S02");
+//        System.out.println("Guset ordered tickets:");
+//        for (Ticket t : guestOrder.getTickets()) System.out.println("  " + t);
+//        System.out.println(" ");
+//
+//        // przykład zakupu po zalogowaniu się na konto
+//        Customer ania = new Customer("c1", "Ania");
+//        Order aniaOrder = screening.buyTickets(ania, "R3S01");
+//        System.out.println("Ania's purchased tickets:");
+//        for (Ticket t : ania.getTickets()) System.out.println("  " + t);
+    }
+    private static Cinema chooseCinema(CinemaSystem system, Scanner sc) {
+        List<Cinema> cinemas = system.getCinemas();
+        if (cinemas.isEmpty()) throw new IllegalStateException("No cinemas configured");
+
+        System.out.println("Choose cinema:");
+        for (int i = 0; i < cinemas.size(); i++) {
+            System.out.printf("%d) %s%n", i + 1, cinemas.get(i).getName());
         }
 
-        //przykład zakpu bez konta
-        Order guestOrder = screening.buyTickets("R2S01", "R2S02");
-        System.out.println("Guset ordered tickets:");
-        for (Ticket t : guestOrder.getTickets()) System.out.println("  " + t);
-        System.out.println(" ");
-
-        // przykład zakupu po zalogowaniu się na konto
-        Customer ania = new Customer("c1", "Ania");
-        Order aniaOrder = screening.buyTickets(ania, "R3S01");
-        System.out.println("Ania's purchased tickets:");
-        for (Ticket t : ania.getTickets()) System.out.println("  " + t);
+        int idx = readIntInRange(sc, 1, cinemas.size());
+        return cinemas.get(idx - 1);
     }
-}
+
+    private static int readIntInRange(Scanner sc, int min, int max) {
+        while (true) {
+            System.out.print("> ");
+            String line = sc.nextLine().trim();
+            try {
+                int v = Integer.parseInt(line);
+                if (v >= min && v <= max) return v;
+            } catch (NumberFormatException ignored) {}
+            System.out.printf("Please enter a number between %d and %d.%n", min, max);
+        }
+    }
+;}
