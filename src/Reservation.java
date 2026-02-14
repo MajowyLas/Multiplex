@@ -135,6 +135,7 @@ public class Reservation {
         );
     }
 
+    //dla logów
     @Override
     public String toString() {
         return "Reservation{" +
