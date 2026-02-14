@@ -1,17 +1,45 @@
-public class Main {
 
-//          public static void main(String[] args) {
-//            Cinema cinema1 = new Cinema("Super Tarasy", "ul. Akademicka 5");
-//            //... configuration and test data should be inserted here...
-//            // below you will find sample function executions
-//            cinema1.printProgramme();
-//            Screening screening = cinema1.getScreenings()[0];
-//            screening.reservePlaces("H34", "H35", "H36"); // seats number given
-//            screening.reservePlaces(seat1, seat2, seat3); // other option
-//            screening.reservePlaces(customer, "H34", "H35", "H36"); // reservation for registered customer
-//            movie1 = cinema1.findMovie("James Bon");
-//            // ... etc ...
-//        }
-//    }
+
+public class Main {
+    public static void main(String[] args) {
+
+            CinemaSystem system = DemoData.buildSystem();
+            new UI(system).run();
+
+
+
+        CinemaSystem system1 = DemoData.buildSystem();
+
+        Cinema cinema1 = system.getCinemas().get(0); // albo znajdź po nazwie
+        Screening screening1 = cinema1.getProgrammeForNextWeek().get(0);
+        Screening screening2 = cinema1.getProgrammeForNextWeek().get(1); // jeśli istnieje
+
+
+      //Demo
+        System.out.println("Demo for bying a ticket:");
+        System.out.println(" ");
+        try {
+            screening1.buyTickets("R1S01");
+        } catch (Exception e) {
+            System.out.println("Expected error: " + e.getMessage());
+            System.out.println(" ");
+        }
+
+        System.out.println("  <<As a guest>>");
+        Order guestOrder = screening1.buyTickets("R2S01", "R2S02");
+        System.out.println("  Gueset ordered tickets:");
+        for (Ticket t : guestOrder.getTickets()) System.out.println("  " + t);
+        System.out.println(" ");
+
+        System.out.println("  <<As a logged-in user:>>");
+        Customer ania = new Customer("c1", "Ania");
+        Order aniaOrder = screening2.buyTickets(ania, "R3S01");
+        System.out.println("  Ania's purchased tickets:");
+        for (Ticket t : ania.getTickets()) System.out.println("  " + t);
+    }
+        }
+
+
+
 
 
