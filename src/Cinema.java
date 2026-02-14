@@ -28,10 +28,32 @@ public class Cinema {
         screenings.add(Objects.requireNonNull(screening));
     }
 
-    public void printProgramme(LocalDate from, int days) {
-        System.out.println("Programme for: " + " --> " + name + " (" + address + ")" + "<----");
+    public List<Movie> getMoviesForNextWeek() {
+        List<Screening> programme = getProgrammeForNextWeek();
 
+        return programme.stream()
+                .map(Screening::getMovie)
+                .distinct()
+                .toList();
     }
+
+
+    public void printMoviesForNextWeek() {
+        System.out.println("Movies for: --> " + name + " (" + address + ") <----");
+
+        List<Movie> movies = getMoviesForNextWeek();
+
+        if (movies.isEmpty()) {
+            System.out.println("(no movies)");
+            return;
+        }
+
+        for (Movie m : movies) {
+            System.out.println(" - " + m);
+        }
+    }
+
+
 
     public Movie findMovie(String query) {
         if (query == null || query.isBlank()) throw new IllegalArgumentException("Query cannot be blank");
@@ -47,12 +69,16 @@ public class Cinema {
     }
 
     public List<Screening> getProgramme(LocalDate from, int days) {
-        LocalDate to = from.plusDays(days);
+        LocalDate toExclusive = from.plusDays(days);
         List<Screening> out = new ArrayList<>();
+
         for (Screening s : screenings) {
             LocalDate d = s.getStart().toLocalDate();
-            if ((d.isEqual(from) || d.isAfter(from)) && d.isBefore(to)) out.add(s);
+            if (!d.isBefore(from) && d.isBefore(toExclusive)) {
+                out.add(s);
+            }
         }
+
         out.sort(Comparator.comparing(Screening::getStart));
         return out;
     }
@@ -66,24 +92,5 @@ public class Cinema {
         return name;
     }
 
-    public void printProgramme() {
-        printProgramme(LocalDate.now(), 7);
-    }
-
-    public Screening[] getScreenings() {
-        return screenings.toArray(new Screening[0]);
-    }
-    public String formatScreenings() {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("\n========== PROGRAMME ==========\n");
-
-        for (Screening s : screenings) {
-            sb.append(s.printScreenings());
-            sb.append("--------------------------------\n");
-        }
-
-        return sb.toString();
-    }
 
 }

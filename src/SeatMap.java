@@ -28,7 +28,6 @@ public class SeatMap {
         return seats;
     }
 
-    // Helper do Main/demo
     public static SeatMap generate(int rows, int seatsPerRow, int vipRowsFromFront) {
         List<Seat> seats = new ArrayList<>();
         for (int r = 1; r <= rows; r++) {

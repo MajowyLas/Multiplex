@@ -90,7 +90,6 @@ public class Reservation {
         return false;
     }
 
-    /** Anulowanie przez użytkownika/system (zanim wygasła lub po). */
     public void cancel() {
         if (status == ReservationStatus.CONVERTED) {
             throw new IllegalStateException("Cannot cancel a converted reservation");
@@ -98,7 +97,6 @@ public class Reservation {
         status = ReservationStatus.CANCELLED;
     }
 
-    /** Wywoływane, gdy rezerwacja została zamieniona na zakup. */
     public void convert() {
         if (status != ReservationStatus.ACTIVE) {
             throw new IllegalStateException("Only ACTIVE reservation can be converted");
@@ -119,7 +117,7 @@ public class Reservation {
                 .toList();
 
         return """
-                ============== RESERVATION ==============
+                ============== YOUR RESERVATION ==========
                 Id       : %s
                 Customer : %s
                 Status   : %s

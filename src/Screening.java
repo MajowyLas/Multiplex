@@ -10,10 +10,10 @@ public class Screening {
     private final LocalDateTime start;
     private final ScreeningType type;
 
-    // UML: Map<String, SeatStatus>
+
     private final Map<String, SeatStatus> seatStatuses = new HashMap<>();
 
-    // żeby TTL dało się zrealizować:
+
     private final Map<String, Reservation> reservationsById = new HashMap<>();
     private final Map<String, String> seatReservationIdBySeatCode = new HashMap<>();
 
@@ -46,7 +46,6 @@ public class Screening {
         return type;
     }
 
-    // publiczne API z UML:
     public Reservation reservePlaces(String... seatCodes) {
         return reservePlaces(null, seatCodes);
     }
@@ -57,7 +56,7 @@ public class Screening {
 
         List<Seat> seats = resolveSeatsOrThrow(seatCodes);
 
-        // wariant atomowy: jak jedno zajęte -> fail (najczytelniejsze biznesowo)
+
         for (Seat s : seats) {
             SeatStatus st = seatStatuses.get(s.getCode());
             if (st == null) throw new IllegalArgumentException("Unknown seat code: " + s.getCode());
@@ -70,7 +69,7 @@ public class Screening {
         Reservation reservation = new Reservation(customer, this, seats, now, now.plus(reservationTtl));
         reservationsById.put(reservation.getId(), reservation);
 
-        // blokuj miejsca
+
         for (Seat s : seats) {
             seatStatuses.put(s.getCode(), SeatStatus.RESERVED);
             seatReservationIdBySeatCode.put(s.getCode(), reservation.getId());
@@ -89,8 +88,7 @@ public class Screening {
 
         List<Seat> seats = resolveSeatsOrThrow(seatCodes);
 
-        // tutaj prosta zasada: kupujesz tylko AVAILABLE.
-        // (Jeśli chcesz kupować RESERVED "swoje", dodamy metodę buyReserved(reservationId).)
+
         for (Seat s : seats) {
             SeatStatus st = seatStatuses.get(s.getCode());
             if (st != SeatStatus.AVAILABLE) {
@@ -98,7 +96,7 @@ public class Screening {
             }
         }
 
-        // sprzedaj miejsca
+
         for (Seat s : seats) {
             seatStatuses.put(s.getCode(), SeatStatus.SOLD);
             seatReservationIdBySeatCode.remove(s.getCode());
@@ -114,7 +112,7 @@ public class Screening {
         return order;
     }
 
-    // pomocnicze
+
     private List<Seat> resolveSeatsOrThrow(String... seatCodes) {
         List<Seat> seats = new ArrayList<>();
         for (String code : seatCodes) {
@@ -125,7 +123,7 @@ public class Screening {
     }
 
     private void cleanupExpired(LocalDateTime now) {
-        // znajduj aktywne rezerwacje, które wygasły
+
         List<String> toExpire = new ArrayList<>();
         for (Reservation r : reservationsById.values()) {
             if (r.getStatus() == ReservationStatus.ACTIVE && r.isExpired(now)) {
@@ -139,7 +137,7 @@ public class Screening {
 
             for (Seat s : r.getSeats()) {
                 String code = s.getCode();
-                // zwalniamy tylko te miejsca, które nadal są RESERVED przez tę rezerwację
+
                 if (seatStatuses.get(code) == SeatStatus.RESERVED) {
                     String currentRid = seatReservationIdBySeatCode.get(code);
                     if (rid.equals(currentRid)) {
