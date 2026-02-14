@@ -14,12 +14,10 @@ public class Main {
         Screening screening1 = cinema1.getProgrammeForNextWeek().get(0);
         Screening screening2 = cinema1.getProgrammeForNextWeek().get(1); // jeśli istnieje
 
-        try {
-            screening1.buyTickets("R1S01");
-        } catch (Exception e) {
-            System.out.println("Expected error: " + e.getMessage());
-        }
-//Demo
+
+      //Demo
+        System.out.println("Demo for bying a ticket:");
+        System.out.println(" ");
         try {
             screening1.buyTickets("R1S01");
         } catch (Exception e) {
@@ -27,16 +25,16 @@ public class Main {
             System.out.println(" ");
         }
 
-//zakup jako guest
+        System.out.println("  <<As a guest>>");
         Order guestOrder = screening1.buyTickets("R2S01", "R2S02");
-        System.out.println("Gueset ordered tickets:");
+        System.out.println("  Gueset ordered tickets:");
         for (Ticket t : guestOrder.getTickets()) System.out.println("  " + t);
         System.out.println(" ");
 
-        // zakup jako user zalogowany
+        System.out.println("  <<As a logged-in user:>>");
         Customer ania = new Customer("c1", "Ania");
         Order aniaOrder = screening2.buyTickets(ania, "R3S01");
-        System.out.println("Ania's purchased tickets:");
+        System.out.println("  Ania's purchased tickets:");
         for (Ticket t : ania.getTickets()) System.out.println("  " + t);
     }
         }
